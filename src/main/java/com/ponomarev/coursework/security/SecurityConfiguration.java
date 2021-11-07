@@ -1,5 +1,6 @@
 package com.ponomarev.coursework.security;
 
+import com.ponomarev.coursework.model.User;
 import com.ponomarev.coursework.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -18,6 +20,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserService userDetailsService;
 
+    private final SavedRequestAwareAuthenticationSuccessHandler handler;
 
     /**
      * @TODO
@@ -29,12 +32,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/**").permitAll()
+                .antMatchers("/admin/**").hasAuthority(User.Role.ADMIN.getAuthority())
+                .antMatchers("/client/**").hasAuthority(User.Role.USER.getAuthority())
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
-                    .loginPage("/login")
-                .defaultSuccessUrl("/main")
+                    .loginPage("/login").permitAll()
+                    .successHandler(handler)
                 .and()
                     .logout()
                     .logoutSuccessUrl("/")

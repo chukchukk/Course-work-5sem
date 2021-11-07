@@ -1,26 +1,27 @@
 package com.ponomarev.coursework.model;
 
-import com.ponomarev.coursework.annotations.StringValidation;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.Set;
 
 
 @Entity
-@Table(name = "usr")
+@Table(name = "usr", uniqueConstraints = @UniqueConstraint(columnNames = {"login"}))
 public class User extends BaseEntity implements UserDetails {
 
     private String login;
 
-    @StringValidation(message = "Type your password correctly")
+    @NotBlank(message = "Type your password correctly")
     @Size(min = 8, max = 50, message = "")
     private String password;
 
-    @ElementCollection(targetClass = Role.class)
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
@@ -31,9 +32,13 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "user_info_id")
     private UserInfo information;
 
-    @OneToOne
+    @OneToMany
     @JoinColumn(name = "card_info_id")
-    private CardInfo cardInfo;
+    private Set<CardInfo> cardInfo;
+
+    @OneToOne
+    @JoinColumn(name = "passport_info_id")
+    private PassportInfo passportInfo;
 
     public enum Role implements GrantedAuthority{
         USER, ADMIN;

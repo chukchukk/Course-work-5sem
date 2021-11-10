@@ -18,7 +18,7 @@ public class User extends BaseEntity implements UserDetails {
     private String login;
 
     @NotBlank(message = "Type your password correctly")
-    @Size(min = 8, max = 50, message = "")
+    @Size(min = 8, message = "")
     private String password;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
@@ -31,14 +31,6 @@ public class User extends BaseEntity implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_info_id")
     private UserInfo information;
-
-    @OneToMany
-    @JoinColumn(name = "card_info_id")
-    private Set<CardInfo> cardInfo;
-
-    @OneToOne
-    @JoinColumn(name = "passport_info_id")
-    private PassportInfo passportInfo;
 
     public enum Role implements GrantedAuthority{
         USER, ADMIN;

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration page</title>
+</head>
+<body>
+<form action="/registrationAcc" method="put">
+    <div>
+        <label> Client card number :
+            <input type="text" name="name" th:value="${cardNumber}" placeholder="XXXX XXXX XXXX XXXX"/>
+        </label>
+    </div>
+    <div>
+        <label>CVV :
+            <input type="password" th:value="${cvv}" placeholder="XXX">
+        </label>
+    </div>
+    <div>
+        <label> Client login: <input type="text" name="email" th:value="${login}"/> </label>
+    </div>
+    <div>
+        <label> Client password: <input type="password" name="password" th:value="${password}"/> </label>
+    </div>
+    <div><input class="btn" type="submit" value="Sign In"/></div>
+</form>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:each="client: ${clients}">
+        <div>
+            <form th:method="get" th:action="@{/admin/createCardForUser}">
+                <label>
+                    Last Name: <span th:text="${client.getLastName()}"/>
+                </label>
+                <label>
+                    First Name: <span th:text="${client.getFirstName()}"/>
+                </label>
+                <label>
+                    Middle Name: <span th:text="${client.getMiddleName()}"/>
+                </label>
+                <label>
+                    Passport series: <span th:text="${client.getPassportSeries()}"/>
+                </label>
+                <label>
+                    Passport number: <span th:text="${client.getPassportNumber()}"/>
+                </label>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

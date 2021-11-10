@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>New client registration</title>
+</head>
+<body>
+    <span style="color: green" th:text="${success}"></span>
+    <span style="color: red" th:text="${failed}"></span>
+    <form th:action="@{/admin/registerNewClient}" method="post">
+        <p>Personal data</p>
+        <label>Last Name:
+            <input type="text" name="lastName" th:value="${lastName}" placeholder="Ivanov">
+            <span style="color: red" th:text="${lastNameErr}"></span>
+        </label> <br>
+        <label>First Name:
+            <input type="text" name="firstName" th:value="${firstName}" placeholder="Ivan">
+            <span style="color: red" th:text="${firstNameErr}"></span>
+        </label> <br>
+        <label>Middle Name:
+            <input type="text" name="middleName" th:value="${middleName}" placeholder="Ivanovich">
+            <span style="color: red" th:text="${middleNameErr}"></span>
+        </label> <br>
+        <label>Birthday date:
+            <input type="date" name="birthdayDate">
+            <span style="color: red" th:text="${birthdayDateErr}"></span>
+        </label><br>
+        <label>E-mail
+            <input type="email" name="email" th:value="${email}" placeholder="example@example.com">
+            <span style="color: red" th:text="${emailErr}"></span>
+        </label><br><br>
+
+        <p>Passport data</p>
+        <label>Series:
+            <input type="text" name="passportSeries" th:value="${passportSeries}" placeholder="XXXX">
+            <span style="color: red" th:text="${passportSeriesErr}"></span>
+        </label> <br>
+        <label>Number:
+            <input type="text" name="passportNumber" th:value="${passportNumber}" placeholder="XXXXXX">
+            <span style="color: red" th:text="${passportNumberErr}"></span>
+        </label> <br>
+        <label>Date of issue:
+            <input type="date" name="passportIssueDate">
+            <span style="color: red" th:text="${passportIssueDateErr}"></span>
+        </label><br><br>
+        <input type="submit" value="Create">
+    </form>
+</body>
+</html>

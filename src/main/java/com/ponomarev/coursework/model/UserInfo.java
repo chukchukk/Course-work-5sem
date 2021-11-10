@@ -1,11 +1,15 @@
 package com.ponomarev.coursework.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "user_info", uniqueConstraints = @UniqueConstraint(columnNames = {"email"}))
 public class UserInfo extends BaseEntity{
 
@@ -24,4 +28,17 @@ public class UserInfo extends BaseEntity{
 
     @NotBlank(message = "Type your birthday date correctly")
     private String birthdayDate;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "passport_info_id")
+    private PassportInfo passportInfo;
+
+    @OneToMany
+    @JoinColumn(name = "card_info_id")
+    private Set<CardInfo> cardInfo;
+
 }

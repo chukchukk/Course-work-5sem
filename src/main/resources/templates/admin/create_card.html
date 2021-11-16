@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create new card</title>
+</head>
+<body>
+    <div th:object="${client}">
+        <form th:action="@{/admin/createCardForUser/{id} (id = ${client.getId()})}" th:method="post">
+                <span th:text="${client.getLastName()}"/><br>
+                <span th:text="${client.getFirstName()}"/><br>
+                <span th:text="${client.getMiddleName()}"/><br>
+                <span th:text="${client.getPassportInfo().getPassportSeries()}"/><br>
+                <span th:text="${client.getPassportInfo().getPassportNumber()}"/><br>
+            <label>Card Number:
+                <input type="text" name="cardNumber" th:value="${cardNumber}" placeholder="XXXX XXXX XXXX XXXX">
+                <span style="color: red" th:text="${cardNumberErr}"></span>
+            </label> <br>
+            <label>Valid THRU:
+                <input type="date" name="validTHRU">
+                <span style="color: red" th:text="${validTHRUErr}"></span>
+            </label> <br>
+            <label>Card CVV:
+                <input type="password" name="cvv" th:value="${cvv}" placeholder="XXX">
+                <span style="color: red" th:text="${cardNumberErr}"></span>
+            </label> <br>
+        </form>
+    </div>
+</body>
+</html>

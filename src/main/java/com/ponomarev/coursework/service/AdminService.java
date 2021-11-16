@@ -1,5 +1,6 @@
 package com.ponomarev.coursework.service;
 
+import com.ponomarev.coursework.dto.CardInfoDTO;
 import com.ponomarev.coursework.dto.RegisterNewClientDTO;
 import com.ponomarev.coursework.model.PassportInfo;
 import com.ponomarev.coursework.model.UserInfo;
@@ -37,7 +38,12 @@ public class AdminService {
 
     public String clientListPage(HttpServletRequest request, Model model) {
         requestModelFilling(request, model);
-        userInfoRepository.findAll()
+        List<UserInfo> users = userInfoRepository.findAll();
+        if (!users.isEmpty()) {
+            model.addAttribute("clients", users);
+        } else {
+            model.addAttribute("emptyList", "Empty list of clients");
+        }
         return "admin/client_list";
     }
 
@@ -55,11 +61,7 @@ public class AdminService {
     public String registerNewClient(BindingResult errors,
                                     RegisterNewClientDTO dto, RedirectAttributes redirectAttributes) {
         if(errors.hasErrors()) {
-            List<FieldError> listOfErrors = errors.getFieldErrors();
-            for (FieldError f : listOfErrors) {
-                redirectAttributes.addFlashAttribute(f.getField() + "Err",
-                        f.getDefaultMessage());
-            }
+            fillErrors(errors, redirectAttributes);
             redirectAttributes.addFlashAttribute("lastName",
                     dto.getLastName());
             redirectAttributes.addFlashAttribute("firstName",
@@ -95,6 +97,18 @@ public class AdminService {
         return "redirect:/admin/newCard";
     }
 
+    public String createCardForUserPage(HttpServletRequest request, Model model, Long id) {
+        requestModelFilling(request, model);
+        Optional<UserInfo> userInfo = userInfoRepository.findById(id);
+        model.addAttribute("client", userInfo.get());
+        return "admin/create_card";
+    }
+    //TODO доделать заведение новой карты для пользователя
+    public String createCardForUser(Long id, CardInfoDTO cardInfoDTO, BindingResult errors, RedirectAttributes redirectAttributes) {
+        if()
+        fillErrors(errors, redirectAttributes);
+    }
+
     private boolean isMoreThan14(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate parse = LocalDate.parse(date, formatter);
@@ -117,6 +131,14 @@ public class AdminService {
         passportInfo.setPassportNumber(dto.getPassportNumber());
         passportInfo.setIssueDate(dto.getPassportIssueDate());
         return passportInfo;
+    }
+
+    private void fillErrors(BindingResult errors, RedirectAttributes redirectAttributes) {
+        List<FieldError> listOfErrors = errors.getFieldErrors();
+        for (FieldError f : listOfErrors) {
+            redirectAttributes.addFlashAttribute(f.getField() + "Err",
+                    f.getDefaultMessage());
+        }
     }
 
 }

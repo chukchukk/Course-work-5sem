@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "card_info", uniqueConstraints = @UniqueConstraint(columnNames = {"cardNumber"}))
-public class    CardInfo extends BaseEntity {
+public class CardInfo extends BaseEntity {
 
     @NotBlank(message = "Type your card number correctly")
     @Size(min = 19, max = 19, message = "Incorrect card number")

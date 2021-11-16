@@ -1,6 +1,9 @@
 package com.ponomarev.coursework.controller.admin;
 
+import com.ponomarev.coursework.dto.CardInfoDTO;
 import com.ponomarev.coursework.dto.RegisterNewClientDTO;
+import com.ponomarev.coursework.model.CardInfo;
+import com.ponomarev.coursework.model.UserInfo;
 import com.ponomarev.coursework.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -39,4 +42,20 @@ public class MainAdminController {
                                     BindingResult errors, RedirectAttributes redirectAttributes) {
         return adminService.registerNewClient(errors, dto, redirectAttributes);
     }
+
+    @GetMapping("/createCardForUser/{id}")
+    public String createCardForUserPage(HttpServletRequest request,
+                                        Model model,
+                                        @PathVariable Long id) {
+        return adminService.createCardForUserPage(request, model, id);
+    }
+
+    @PostMapping("/createCardForUser/{id}")
+    public String createCardForUser(@PathVariable Long id,
+                                    @Valid @ModelAttribute CardInfoDTO cardInfoDTO,
+                                    BindingResult errors,
+                                    RedirectAttributes redirectAttributes) {
+        return adminService.createCardForUser(id, cardInfoDTO, errors, redirectAttributes);
+    }
+
 }

@@ -3,28 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        table {
+            width: 100%;
+            border: 2px double black;
+            text-align: center;
+        }
+        table th {
+            font-weight: bold;
+            padding: 2px;
+            background: #efefef;
+            border: 2px double black;
+        }
+        table td {
+            border: 2px double black;
+            padding: 2px;
+        }
+    </style>
 </head>
 <body>
-    <div th:each="client: ${clients}">
-        <div>
-            <form th:method="get" th:action="@{/admin/createCardForUser}">
-                <label>
-                    Last Name: <span th:text="${client.getLastName()}"/>
-                </label>
-                <label>
-                    First Name: <span th:text="${client.getFirstName()}"/>
-                </label>
-                <label>
-                    Middle Name: <span th:text="${client.getMiddleName()}"/>
-                </label>
-                <label>
-                    Passport series: <span th:text="${client.getPassportSeries()}"/>
-                </label>
-                <label>
-                    Passport number: <span th:text="${client.getPassportNumber()}"/>
-                </label>
+    <span th:text="${emptyList}"/>
+    <table>
+        <thead>
+        <tr>
+            <th> Last Name </th>
+            <th> First Name </th>
+            <th> Middle Name </th>
+            <th> Passport Series </th>
+            <th> Passport Number </th>
+            <th> Has an account </th>
+            <th> Create a new card</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="client: ${clients}">
+            <form th:method="get" th:action="@{/admin/createCardForUser/{id} (id = ${client.getId()})}">
+                <td><span th:text="${client.getLastName()}"/></td>
+                <td><span th:text="${client.getFirstName()}"/></td>
+                <td><span th:text="${client.getMiddleName()}"/></td>
+                <td><span th:text="${client.getPassportInfo().getPassportSeries()}"/></td>
+                <td><span th:text="${client.getPassportInfo().getPassportNumber()}"/></td>
+                <td>
+                    <span th:text="${client.getUser()} ? '&#9989;' : '&#10060;'"></span>
+                </td>
+                <td><input type="submit" value="Create a new card"></td>
             </form>
-        </div>
-    </div>
+        </tr>
+        </tbody>
+    </table>
 </body>
 </html>

@@ -37,8 +37,8 @@ public class UserInfo extends BaseEntity{
     @JoinColumn(name = "passport_info_id")
     private PassportInfo passportInfo;
 
-    @OneToMany
-    @JoinColumn(name = "card_info_id")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_info_id")
     private Set<CardInfo> cardInfo;
 
 }

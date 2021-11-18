@@ -2,8 +2,10 @@ package com.ponomarev.coursework.service;
 
 import com.ponomarev.coursework.dto.CardInfoDTO;
 import com.ponomarev.coursework.dto.RegisterNewClientDTO;
+import com.ponomarev.coursework.model.CardInfo;
 import com.ponomarev.coursework.model.PassportInfo;
 import com.ponomarev.coursework.model.UserInfo;
+import com.ponomarev.coursework.repository.CardInfoRepository;
 import com.ponomarev.coursework.repository.PassportInfoRepository;
 import com.ponomarev.coursework.repository.UserInfoRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +33,8 @@ public class AdminService {
     private final UserInfoRepository userInfoRepository;
 
     private final PassportInfoRepository passportInfoRepository;
+
+    private final CardInfoRepository cardInfoRepository;
 
     public String newCardPage(HttpServletRequest request, Model model) {
         requestModelFilling(request, model);
@@ -105,8 +110,35 @@ public class AdminService {
     }
     //TODO доделать заведение новой карты для пользователя
     public String createCardForUser(Long id, CardInfoDTO cardInfoDTO, BindingResult errors, RedirectAttributes redirectAttributes) {
-        if()
-        fillErrors(errors, redirectAttributes);
+        if (errors.hasErrors()) {
+            fillErrors(errors, redirectAttributes);
+            return "redirect:/admin/createCardForUser/" + id;
+        }
+        Optional<UserInfo> userById = userInfoRepository.findById(id);
+        if (userById.isPresent()) {
+            UserInfo userInfo = userById.get();
+            Set<CardInfo> usersCard = userInfo.getCardInfo();
+            CardInfo newCard = new CardInfo();
+            newCard.setCardNumber(cardInfoDTO.getCardNumber());
+            newCard.setValidTHRU(cardInfoDTO.getValidTHRU());
+            newCard.setCvv(cardInfoDTO.getCvv());
+            newCard.setActive(true);
+            newCard.setUserInfo(userInfo);
+
+            if (userHasCardWithNumber(usersCard, cardInfoDTO.getCardNumber())) {
+                redirectAttributes.addFlashAttribute("cardNumberExist", "Card with number already exists");
+                return "redirect:/admin/createCardForUser/" + id;
+            }
+
+            cardInfoRepository.save(newCard);
+        } else {
+            redirectAttributes.addFlashAttribute("clientNotFound", "Client not found");
+        }
+        return "redirect:/admin/createCardForUser/" + id;
+    }
+
+    private boolean userHasCardWithNumber(Set<CardInfo> usersCard, String cardNumber) {
+        return usersCard.stream().anyMatch(cardInfo -> cardInfo.getCardNumber().equals(cardNumber));
     }
 
     private boolean isMoreThan14(String date) {

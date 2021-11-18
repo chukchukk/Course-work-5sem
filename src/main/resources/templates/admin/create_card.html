@@ -5,6 +5,7 @@
     <title>Create new card</title>
 </head>
 <body>
+    <span style="color: red" th:text="${clientNotFound}"></span>
     <div th:object="${client}">
         <form th:action="@{/admin/createCardForUser/{id} (id = ${client.getId()})}" th:method="post">
                 <span th:text="${client.getLastName()}"/><br>
@@ -15,6 +16,7 @@
             <label>Card Number:
                 <input type="text" name="cardNumber" th:value="${cardNumber}" placeholder="XXXX XXXX XXXX XXXX">
                 <span style="color: red" th:text="${cardNumberErr}"></span>
+                <span style="color: red" th:text="${cardNumberExist}"></span>
             </label> <br>
             <label>Valid THRU:
                 <input type="date" name="validTHRU">
@@ -24,6 +26,7 @@
                 <input type="password" name="cvv" th:value="${cvv}" placeholder="XXX">
                 <span style="color: red" th:text="${cardNumberErr}"></span>
             </label> <br>
+            <input type="submit" value="CREATE">
         </form>
     </div>
 </body>

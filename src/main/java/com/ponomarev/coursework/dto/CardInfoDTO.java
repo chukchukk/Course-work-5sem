@@ -16,8 +16,6 @@ public class CardInfoDTO {
     private String cardNumber;
 
     @NotBlank(message = "Type your valid thru correctly")
-    @Size(min = 5, max = 5, message = "Incorrect date")
-    @Pattern(regexp = "(0[1-9]|1[0-2])/[0-9]{2}")
     private String validTHRU;
 
     @NotBlank(message = "Type cvv correctly")

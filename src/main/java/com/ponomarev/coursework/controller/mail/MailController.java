@@ -1,5 +1,7 @@
 package com.ponomarev.coursework.controller.mail;
 
-//TODO Сделать регистрацию с подтверждением по e-mail
+import org.springframework.stereotype.Controller;
+
+@Controller
 public class MailController {
 }

@@ -1,6 +1,9 @@
 package com.ponomarev.coursework.model;
 
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -11,6 +14,9 @@ import java.util.Collection;
 import java.util.Set;
 
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "usr", uniqueConstraints = @UniqueConstraint(columnNames = {"login"}))
 public class User extends BaseEntity implements UserDetails {

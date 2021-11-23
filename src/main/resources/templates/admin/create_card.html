@@ -6,6 +6,7 @@
 </head>
 <body>
     <span style="color: red" th:text="${clientNotFound}"></span>
+    <span style="color: green" th:text="${success}"></span>
     <div th:object="${client}">
         <form th:action="@{/admin/createCardForUser/{id} (id = ${client.getId()})}" th:method="post">
                 <span th:text="${client.getLastName()}"/><br>

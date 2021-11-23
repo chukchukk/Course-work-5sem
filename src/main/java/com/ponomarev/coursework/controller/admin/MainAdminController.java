@@ -2,8 +2,6 @@ package com.ponomarev.coursework.controller.admin;
 
 import com.ponomarev.coursework.dto.CardInfoDTO;
 import com.ponomarev.coursework.dto.RegisterNewClientDTO;
-import com.ponomarev.coursework.model.CardInfo;
-import com.ponomarev.coursework.model.UserInfo;
 import com.ponomarev.coursework.service.AdminService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;

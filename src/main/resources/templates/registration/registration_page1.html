@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration page</title>
+</head>
+<body>
+    <span>Step 1: Card check</span>
+    <form th:method="post" th:action="@{/registration/firstStep}">
+        <label>Input card number
+            <input type="text" name="cardNumber" th:value="${cardNumber}" placeholder="XXXX XXXX XXXX XXXX">
+            <span th:text="${cardNumberErr}" style="color: red"/>
+            <input type="submit" value="Continue">
+        </label>
+    </form>
+</body>
+</html>

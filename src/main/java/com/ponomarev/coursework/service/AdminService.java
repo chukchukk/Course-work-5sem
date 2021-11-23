@@ -13,22 +13,19 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 @Service
 @AllArgsConstructor
-public class AdminService {
+public class AdminService implements BaseService{
 
     private final UserInfoRepository userInfoRepository;
 
@@ -50,16 +47,6 @@ public class AdminService {
             model.addAttribute("emptyList", "Empty list of clients");
         }
         return "admin/client_list";
-    }
-
-    private void requestModelFilling(HttpServletRequest request, Model model) {
-        Map<String, ?> flashAttributes = RequestContextUtils.getInputFlashMap(request);
-
-        if(flashAttributes != null) {
-            for (Map.Entry<String, ?> keyVal : flashAttributes.entrySet()) {
-                model.addAttribute(keyVal.getKey(), keyVal.getValue());
-            }
-        }
     }
 
     @SneakyThrows
@@ -108,7 +95,7 @@ public class AdminService {
         model.addAttribute("client", userInfo.get());
         return "admin/create_card";
     }
-    //TODO доделать заведение новой карты для пользователя
+
     public String createCardForUser(Long id, CardInfoDTO cardInfoDTO, BindingResult errors, RedirectAttributes redirectAttributes) {
         if (errors.hasErrors()) {
             fillErrors(errors, redirectAttributes);
@@ -134,6 +121,7 @@ public class AdminService {
         } else {
             redirectAttributes.addFlashAttribute("clientNotFound", "Client not found");
         }
+        redirectAttributes.addFlashAttribute("success", "Successfully");
         return "redirect:/admin/createCardForUser/" + id;
     }
 
@@ -163,14 +151,6 @@ public class AdminService {
         passportInfo.setPassportNumber(dto.getPassportNumber());
         passportInfo.setIssueDate(dto.getPassportIssueDate());
         return passportInfo;
-    }
-
-    private void fillErrors(BindingResult errors, RedirectAttributes redirectAttributes) {
-        List<FieldError> listOfErrors = errors.getFieldErrors();
-        for (FieldError f : listOfErrors) {
-            redirectAttributes.addFlashAttribute(f.getField() + "Err",
-                    f.getDefaultMessage());
-        }
     }
 
 }

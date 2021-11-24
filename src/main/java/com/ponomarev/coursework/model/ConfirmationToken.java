@@ -2,12 +2,11 @@ package com.ponomarev.coursework.model;
 
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
-import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 
+import javax.annotation.Generated;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+
 
 @Data
 @Builder
@@ -19,5 +18,4 @@ public class ConfirmationToken implements Serializable {
 
 	private String confirmationToken;
 
-	private String userInfo;
 }

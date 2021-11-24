@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Registration page</title>
 </head>
 <body>
+<div th:if="${flag != true}">
+    <span>Step 2: type confirmation code</span><br>
+    <span th:text="${mailTo}"/>
+    <form th:method="post" th:action="@{/registration/checkConfirmationCode/{id} (id = ${userInfoID})}">
+        <label>Input confirmation code
+            <input type="text" name="confirmationCode" th:value="${confirmationCode}">
+            <span th:text="${confirmationCodeErr}" style="color: red"/>
+            <input type="submit" value="Continue">
+        </label>
+    </form>
+</div>
 
+<div th:if="${flag == true}">
+    <span>Step 3: type login and password</span><br>
+    <span th:text="${mailTo}"/>
+    <form th:method="post" th:action="@{/registration/createUser/{id} (id = ${userInfoID})}">
+        <label>Input login
+            <input type="text" name="login" th:value="${login}"><br>
+        </label>
+        <span style="color: red" th:text="${loginErr}"/>
+        <label>Input password
+            <input type="text" name="password" th:value="${password}"><br>
+        </label>
+        <span style="color: red" th:text="${passwordErr}"/>
+        <input type="submit" value="Registration">
+    </form>
+</div>
 </body>
 </html>

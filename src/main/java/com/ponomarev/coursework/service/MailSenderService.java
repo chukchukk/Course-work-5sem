@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -24,24 +25,21 @@ public class MailSenderService {
 
 	private final JavaMailSender mailSender;
 
+	@Async
 	public String sendForRegistration(UserInfo userInfo) {
 		String confirmUUID = UUID.randomUUID().toString();
-
-		//TODO доделать регистрацию, сделать TTL, хранить уникальное значение пользователя - код
-		Optional<ConfirmationToken> byId = confirmationTokenRepository.findById("1");
 
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setFrom(mailFrom);
 		message.setTo(userInfo.getEmail());
 		message.setSubject("Confirmation code from bank");
-		message.setText("Your confirmation code : " + confirmUUID + ".\nCopy it before close this message.");
+		message.setText("Your confirmation code : " + confirmUUID + "\nCopy it before close this message.");
 		mailSender.send(message);
 
 		ConfirmationToken confirmationToken = ConfirmationToken
 				.builder()
-				.id("1")
+				.id(userInfo.getId().toString())
 				.confirmationToken(confirmUUID)
-				.userInfo(userInfo.getEmail())
 				.build();
 		confirmationTokenRepository.save(confirmationToken);
 		return "A confirmation code has been sent to the address " + userInfo.getEmail();

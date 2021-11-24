@@ -1,14 +1,12 @@
 package com.ponomarev.coursework.controller;
 
+import com.ponomarev.coursework.dto.UserDTO;
 import com.ponomarev.coursework.service.RegistrationService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,8 +30,23 @@ public class RegistrationController {
 		return registrationService.checkCardAndSend(cardNumber, redirectAttributes);
 	}
 
-	@GetMapping("/secondStep")
+	@GetMapping("/completion")
 	public String getSecondStepPage(HttpServletRequest httpServletRequest, Model model) {
 		return registrationService.getSecondStepPage(httpServletRequest, model);
+	}
+
+	@PostMapping("/checkConfirmationCode/{id}")
+	public String checkConfirmationCode(@RequestParam(name = "confirmationCode") String confirmationCode,
+										@PathVariable Long id,
+										RedirectAttributes redirectAttributes) {
+		return registrationService.checkConfirmationCode(id, confirmationCode, redirectAttributes);
+	}
+
+	@PostMapping("/createUser/{id}")
+	public String createUser(@ModelAttribute @Valid UserDTO userDTO,
+							 @PathVariable Long id,
+							 BindingResult bindingResult,
+							 RedirectAttributes redirectAttributes) {
+		return registrationService.createUser(userDTO, id, bindingResult, redirectAttributes);
 	}
 }

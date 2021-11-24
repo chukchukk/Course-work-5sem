@@ -24,7 +24,7 @@ public class User extends BaseEntity implements UserDetails {
     private String login;
 
     @NotBlank(message = "Type your password correctly")
-    @Size(min = 8, message = "")
+    @Size(min = 8, message = "Length of password should be > 8 characters")
     private String password;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)

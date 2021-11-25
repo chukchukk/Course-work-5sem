@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collections;
 import java.util.Optional;
 
 //TODO проверка на последовательность шагов в каждом методе
@@ -78,7 +79,7 @@ public class RegistrationService implements BaseService{
 				return "redirect:/registration/completion";
 			}
 		}
-
+		//TODO
 		redirectAttributes.addFlashAttribute("flag", false);
 		redirectAttributes.addFlashAttribute("confirmationCodeErr", "ОШИБКА");
 		return "redirect:/registration/completion";
@@ -90,12 +91,14 @@ public class RegistrationService implements BaseService{
 			fillErrors(bindingResult, redirectAttributes);
 			return "redirect:/registration/completion";
 		}
+		//TODO проверка на логин в бд
 		UserInfo userInfo = userInfoRepository.findById(id).get();
 		User user = new User();
 		user.setLogin(userDTO.getLogin());
 		user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 		user.setInformation(userInfo);
 		user.setActive(true);
+		user.setRoles(Collections.singleton(User.Role.USER));
 
 		userInfo.setUser(user);
 		userInfoRepository.save(userInfo);

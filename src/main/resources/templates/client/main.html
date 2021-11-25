@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a href="/client/changeClientInfo">
+    <input type="button" value="Change User Info">
+</a><br>
+<a href="/client/operationsHistory">
+    <input type="button" value="Operations History">
+</a>
+<div th:each="card : ${cards}">
+    <p>Card number</p>
+    <span th:text="${card.getCardNumber()}"/>
+</div>
+<a href="/client/getNewCard">
+    <input type="button" value="Get a new card">
+</a><br>
+</body>
+</html>

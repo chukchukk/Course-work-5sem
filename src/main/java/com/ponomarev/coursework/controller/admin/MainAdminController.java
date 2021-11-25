@@ -17,6 +17,7 @@ import javax.validation.Valid;
 @RequestMapping("/admin")
 @AllArgsConstructor
 public class MainAdminController {
+
     private final AdminService adminService;
 
     @GetMapping
@@ -29,7 +30,6 @@ public class MainAdminController {
         return adminService.newCardPage(request, model);
     }
 
-    //TODO Сделать лист клиентов, регистрация карт для них
     @GetMapping("/clientList")
     public String clientListPage(HttpServletRequest request, Model model) {
         return adminService.clientListPage(request, model);

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>Current info</p>
+<label>
+  Login :
+  <span th:text="${login}"/>
+</label>
+<label>
+  Email :
+  <p th:text="${email}"></p>
+</label>
+
+<p>Change login, email</p>
+<form th:action="@{/client/changeClientInfo}" method="post">
+  <span style="color: red" th:text="${errorMessage}"/><br>
+  <span style="color: green" th:text="${successMessage}"/><br>
+  <div>
+    <p>Login</p>
+    <input type="text" name="login" th:value="${currentLogin}">
+    <span style="color: red" th:text="${loginErr}"></span>
+  </div><br>
+  <div>
+    <p>Email</p>
+    <input type="text" name="email" th:value="${currentEmail}">
+    <span style="color: red" th:text="${emailErr}"></span>
+  </div>
+  <input type="submit" value="submit">
+</form>
+
+<form th:action="@{/client/changeClientPassword}" method="post">
+  <div>
+    <span>Enter your old password:</span> <br>
+    <input type="text" name="oldPassword" required>
+    <span style="color: red" th:text="${oldPasswordErr}"></span> <br>
+  </div>
+  <div>
+    <span>Enter your new password:</span>
+    <input type="text" name="passwordFirstTry" required>
+    <span style="color: red" th:text="${passwordFirstTryErr}"></span> <br>
+  </div>
+  <div>
+    <span>Confirm new password:</span>
+    <input type="text" name="passwordSecondTry" required>
+    <span style="color: red" th:text="${passwordSecondTryErr}"></span>
+  </div>
+  <input type="submit" value="Change password">
+</form>
+</body>
+</html>

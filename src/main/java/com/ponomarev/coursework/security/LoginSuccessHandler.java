@@ -18,7 +18,7 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication)
-            throws ServletException, IOException {
+            throws IOException {
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         String redirectURL = "/notFound";
 

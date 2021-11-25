@@ -2,15 +2,13 @@ package com.ponomarev.coursework.model;
 
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
-
-import javax.annotation.Generated;
 import javax.persistence.*;
 import java.io.Serializable;
 
 
 @Data
 @Builder
-@RedisHash("ConfirmationToken")
+@RedisHash(value = "ConfirmationToken", timeToLive = 900)
 public class ConfirmationToken implements Serializable {
 
 	@Id

@@ -11,9 +11,18 @@
 <a href="/client/operationsHistory">
     <input type="button" value="Operations History">
 </a>
+<a href="/client/templates">
+    <input type="button" value="Templates">
+</a>
+<span th:text="${cardErr}" style="color: red"/>
+<span th:text="${cardSuccess}" style="color: green"/>
 <div th:each="card : ${cards}">
-    <p>Card number</p>
-    <span th:text="${card.getCardNumber()}"/>
+    <span>Card number</span><br>
+    <form method="post" th:action="@{/client/blockCard/{cardNumber} (cardNumber = ${card.getCardNumber()})}">
+        <span th:text="${card.getCardNumber()}"/>
+        <input type="submit" value="Block">
+    </form>
+    <span>Balance: <span th:text="${card.getBalance()}"/></span>
 </div>
 <a href="/client/getNewCard">
     <input type="button" value="Get a new card">

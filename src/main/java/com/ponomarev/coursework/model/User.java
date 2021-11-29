@@ -38,6 +38,9 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "user_info_id")
     private UserInfo information;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<Template> templates;
+
     public enum Role implements GrantedAuthority{
         USER, ADMIN;
 

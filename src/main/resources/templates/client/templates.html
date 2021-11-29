@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="post" th:action="@{/client/templates/findClient}">
+        <span>Find client by card number</span>
+        <input type="text" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX">
+        <input type="submit" value="Find client">
+    </form>
+    <div th:if="${flag == true}">
+        <div th:object="${clientByCardNumber}">
+            <span style="color: green" th:text="${successSearch}"/>
+            <span style="color: red" th:text="${notSuccessSearch}"/>
+            <form method="post" th:action="@{client/templates/addTemplate}" th:if="${clientByCardNumber.getFirstName() != null}">
+                <label>
+                    Name: <span th:text="${clientByCardNumber.getFirstName()}"/>
+                </label>
+                <label>
+                    Last Name: <span th:text="${clientByCardNumber.getLastName()}"/>
+                </label>
+                <label>
+                    Card Number: <span th:text="${clientByCardNumber.getCardNumber()}"/>
+                </label>
+                <input type="submit" value="Add to templates">
+            </form>
+        </div>
+    </div>
+    <div th:each="client : ${clients}">
+        <form method="get" th:action="@{/client/transfer}">
+            <label>
+                Name: <span th:text="${client.getFirstName()}"/>
+            </label>
+            <label>
+                Last Name: <span th:text="${client.getLastName()}"/>
+            </label>
+            <label>
+                Card Number: <span th:text="${client.getCardNumber()}"/>
+            </label>
+            <input type="submit" value="Make a transfer">
+        </form>
+    </div>
+</body>
+</html>

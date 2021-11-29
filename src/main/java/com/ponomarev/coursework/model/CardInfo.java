@@ -30,4 +30,7 @@ public class CardInfo extends BaseEntity {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private UserInfo userInfo;
+
+    @Column
+    private Double balance;
 }

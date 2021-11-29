@@ -111,6 +111,7 @@ public class AdminService implements BaseService{
             newCard.setCvv(cardInfoDTO.getCvv());
             newCard.setActive(true);
             newCard.setUserInfo(userInfo);
+            newCard.setBalance((double) 0);
 
             if (userHasCardWithNumber(usersCard, cardInfoDTO.getCardNumber())) {
                 redirectAttributes.addFlashAttribute("cardNumberExist", "Card with number already exists");

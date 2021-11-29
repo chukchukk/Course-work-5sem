@@ -9,10 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,5 +50,25 @@ public class MainClientController {
 									   BindingResult errors,
 									   RedirectAttributes redirectAttributes) {
 		return clientService.changePassword(user, dto, errors, redirectAttributes);
+	}
+
+	@PostMapping("/blockCard/{cardNumber}")
+	public String blockCard(@PathVariable String cardNumber,
+							RedirectAttributes redirectAttributes) {
+		return clientService.blockCard(cardNumber, redirectAttributes);
+	}
+
+	@GetMapping("/templates")
+	public String templatesPage(@AuthenticationPrincipal User user,
+								HttpServletRequest request,
+								Model model) {
+		return clientService.templatesPage(user, request, model);
+	}
+
+	@PostMapping("/templates/findClient")
+	public String findClientForTemplate(@AuthenticationPrincipal User user,
+										@RequestParam(name = "cardNumber") String cardNumber,
+										RedirectAttributes redirectAttributes) {
+		return clientService.findClientForTemplate(user, cardNumber, redirectAttributes);
 	}
 }

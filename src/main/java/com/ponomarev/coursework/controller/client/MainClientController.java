@@ -2,6 +2,7 @@ package com.ponomarev.coursework.controller.client;
 
 import com.ponomarev.coursework.dto.ChangeLoginEmailDTO;
 import com.ponomarev.coursework.dto.ChangePasswordDTO;
+import com.ponomarev.coursework.model.Template;
 import com.ponomarev.coursework.model.User;
 import com.ponomarev.coursework.service.ClientService;
 import lombok.AllArgsConstructor;
@@ -65,10 +66,43 @@ public class MainClientController {
 		return clientService.templatesPage(user, request, model);
 	}
 
-	@PostMapping("/templates/findClient")
+	@GetMapping("/templates/findClient")
 	public String findClientForTemplate(@AuthenticationPrincipal User user,
 										@RequestParam(name = "cardNumber") String cardNumber,
 										RedirectAttributes redirectAttributes) {
 		return clientService.findClientForTemplate(user, cardNumber, redirectAttributes);
 	}
+
+	@PostMapping("/templates/addTemplate")
+	public String addClientTemplate(@ModelAttribute Template template,
+									RedirectAttributes redirectAttributes,
+									@AuthenticationPrincipal User user) {
+		return clientService.addClientTemplate(user, template, redirectAttributes);
+	}
+
+	@DeleteMapping("/templates/delete/{cardNumber}")
+	public String deleteTemplate(@PathVariable(name = "cardNumber") String cardNumber,
+								 @AuthenticationPrincipal User user) {
+		return clientService.deleteTemplate(cardNumber, user);
+	}
+
+	@GetMapping("/transaction")
+	public String getTransactionPage(HttpServletRequest request,
+									 Model model) {
+		return clientService.getTransactionPage(request, model);
+	}
+
+	@GetMapping("/transaction/findClient")
+	public String findTransactionClient(@AuthenticationPrincipal User user,
+										@RequestParam(name = "cardNumber") String cardNumber,
+										RedirectAttributes redirectAttributes) {
+		return clientService.findClientForTransaction(user, cardNumber, redirectAttributes);
+	}
+
+	//TODO сделать получение карты пользователя при транзакции
+	@PostMapping("/transaction/test")
+	public String test(@RequestParam(name = "carddd") String carddd) {
+		return carddd;
+	}
+
 }

@@ -102,6 +102,7 @@ public class RegistrationService implements BaseService{
 
 		userInfo.setUser(user);
 		userInfoRepository.save(userInfo);
+		confirmationTokenRepository.deleteById(userInfo.getId().toString());
 		return "redirect:/login";
 	}
 }

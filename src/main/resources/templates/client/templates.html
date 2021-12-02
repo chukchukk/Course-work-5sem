@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-    <form method="post" th:action="@{/client/templates/findClient}">
+    <form method="get" th:action="@{/client/templates/findClient}">
         <span>Find client by card number</span>
         <input type="text" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX">
         <input type="submit" value="Find client">
@@ -14,7 +14,10 @@
         <div th:object="${clientByCardNumber}">
             <span style="color: green" th:text="${successSearch}"/>
             <span style="color: red" th:text="${notSuccessSearch}"/>
-            <form method="post" th:action="@{client/templates/addTemplate}" th:if="${clientByCardNumber.getFirstName() != null}">
+            <form method="post" th:action="@{/client/templates/addTemplate}" th:if="${clientByCardNumber.getFirstName() != null}">
+                <input type="hidden" th:field="*{firstName}" th:value="${firstName}" />
+                <input type="hidden" th:field="*{lastName}" th:value="${lastName}" />
+                <input type="hidden" th:field="*{cardNumber}" th:value="${cardNumber}" />
                 <label>
                     Name: <span th:text="${clientByCardNumber.getFirstName()}"/>
                 </label>
@@ -40,6 +43,9 @@
                 Card Number: <span th:text="${client.getCardNumber()}"/>
             </label>
             <input type="submit" value="Make a transfer">
+        </form>
+        <form th:method="delete" th:action="@{/client/templates/delete/{cardNumber} (cardNumber = ${client.getCardNumber()})}">
+            <input type="submit" value="Delete">
         </form>
     </div>
 </body>

@@ -69,14 +69,27 @@ public class AdminService implements BaseService{
             redirectAttributes.addFlashAttribute("failed", "Not successful");
             return "redirect:/admin/newCard";
             }
-        Optional<PassportInfo> passportInfoFromBD = passportInfoRepository.findAllByPassportSeriesAndPassportNumber(dto.getPassportSeries(),
-                dto.getPassportNumber());
-        if (passportInfoFromBD.isPresent()) {
-            redirectAttributes.addFlashAttribute("failed", "Client with passport data already exists");
+        if (userInfoRepository.findByEmail(dto.getEmail()).isPresent()) {
+            redirectAttributes.addFlashAttribute(
+                    "emailErr",
+                    "User with email is exist"
+            );
+            return "redirect:/admin/newCard";
+        }
+        if (passportInfoRepository.findAllByPassportSeriesAndPassportNumber(
+                dto.getPassportSeries(),
+                dto.getPassportNumber())
+                .isPresent()) {
+                redirectAttributes.addFlashAttribute(
+                        "failed",
+                        "Client with passport data already exists"
+                );
             return "redirect:/admin/newCard";
         }
         if (!isMoreThan14(dto.getBirthdayDate())) {
-            redirectAttributes.addFlashAttribute("failed", "The client is less than 14 years old");
+            redirectAttributes.addFlashAttribute("failed",
+                    "The client is less than 14 years old"
+            );
             return "redirect:/admin/newCard";
         }
 

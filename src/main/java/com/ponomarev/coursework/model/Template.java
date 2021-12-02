@@ -18,8 +18,7 @@ public class Template extends BaseEntity {
 
 	private String cardNumber;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="user_id")
+	@ManyToOne
 	private User user;
 
 }

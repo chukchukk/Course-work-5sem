@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Transfer page</title>
+</head>
+<body>
+    <form method="get" th:action="@{/client/transaction/findClient}">
+        <span>Find client for transfer by card number</span>
+        <input type="text" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX">
+        <input type="submit" value="Find client">
+    </form>
+    <div th:if="${isFounded == true}">
+        <div th:object="${transactionClient}">
+            <span style="color: green" th:text="${successSearch}"/>
+            <span style="color: red" th:text="${notSuccessSearch}"/>
+            <form method="post" th:action="@{/client/transaction/test}" th:if="${transactionClient.getFirstName() != null}">
+                <span>Found client</span><br>
+                <label>
+                    Name: <span th:text="${transactionClient.getFirstName()}"/>
+                </label><br>
+                <label>
+                    Last Name: <span th:text="${transactionClient.getLastName()}"/>
+                </label><br>
+                <label>
+                    Card Number: <span th:text="${transactionClient.getCardNumber()}"/>
+                </label><br>
+                <span>Select the card from which you want to transfer money</span><br>
+                <select>
+                    <option th:each="card : ${transactionClient.getCards().entrySet()}" th:value="${card.getKey()}" th:text="${card.getKey()} + ' ' + ${card.getValue()}"/>
+                </select>
+                <input type="submit" value="continue">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

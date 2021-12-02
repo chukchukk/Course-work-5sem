@@ -2,25 +2,24 @@ package com.ponomarev.coursework.service;
 
 import com.ponomarev.coursework.dto.ChangeLoginEmailDTO;
 import com.ponomarev.coursework.dto.ChangePasswordDTO;
+import com.ponomarev.coursework.dto.TransactionDTO;
 import com.ponomarev.coursework.model.CardInfo;
 import com.ponomarev.coursework.model.Template;
 import com.ponomarev.coursework.model.User;
 import com.ponomarev.coursework.model.UserInfo;
 import com.ponomarev.coursework.repository.CardInfoRepository;
+import com.ponomarev.coursework.repository.TemplateRepository;
 import com.ponomarev.coursework.repository.UserInfoRepository;
 import com.ponomarev.coursework.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +33,8 @@ public class ClientService implements BaseService {
 	private final BCryptPasswordEncoder encoder;
 
 	private final CardInfoRepository cardInfoRepository;
+
+	private final TemplateRepository templateRepository;
 
 	public String clientMainPage(User user, HttpServletRequest request, Model model) {
 		requestModelFilling(request, model);
@@ -142,6 +143,12 @@ public class ClientService implements BaseService {
 			redirectAttributes.addFlashAttribute("notSuccessSearch", "You cannot add your own card to templates");
 			return "redirect:/client/templates";
 		}
+		if (templateRepository.findTemplateByCardNumberAndUser(cardNumber, user).isPresent()) {
+			redirectAttributes.addFlashAttribute("flag", true);
+			redirectAttributes.addFlashAttribute("clientByCardNumber", new Template());
+			redirectAttributes.addFlashAttribute("notSuccessSearch", "Client has already been added to the template");
+			return "redirect:/client/templates";
+		}
 		Optional<CardInfo> infoByCardNumber = cardInfoRepository.findCardInfoByCardNumber(cardNumber);
 		if (infoByCardNumber.isPresent()) {
 			CardInfo cardInfo = infoByCardNumber.get();
@@ -160,4 +167,53 @@ public class ClientService implements BaseService {
 		}
 		return "redirect:/client/templates";
 	}
+
+	public String addClientTemplate(User user,Template template,
+									RedirectAttributes redirectAttributes) {
+		Set<Template> templates = user.getTemplates();
+		templates.add(template);
+		userRepository.save(user);
+		return "redirect:/client/templates";
+	}
+
+	public String deleteTemplate(String cardNumber, User user) {
+		Optional<Template> template = templateRepository.findTemplateByCardNumberAndUser(cardNumber, user);
+		templateRepository.delete(template.get());
+		return "redirect:/client/templates";
+	}
+
+	public String getTransactionPage(HttpServletRequest request, Model model) {
+		requestModelFilling(request, model);
+		return "client/transaction_page";
+	}
+
+	public String findClientForTransaction(User user, String cardNumber, RedirectAttributes redirectAttributes) {
+		UserInfo byUser = userInfoRepository.findByUser(user);
+		if (byUser.getCardInfo().stream().map(CardInfo::getCardNumber).anyMatch(cn -> cn.equals(cardNumber))) {
+			redirectAttributes.addFlashAttribute("isFounded", true);
+			redirectAttributes.addFlashAttribute("transactionClient", new TransactionDTO());
+			redirectAttributes.addFlashAttribute("notSuccessSearch", "You cannot transfer money to your card");
+			return "redirect:/client/transaction";
+		}
+		Optional<CardInfo> infoByCardNumber = cardInfoRepository.findCardInfoByCardNumber(cardNumber);
+		if (infoByCardNumber.isPresent()) {
+			TransactionDTO transactionDTO = new TransactionDTO();
+			CardInfo transactionCardInfo = infoByCardNumber.get();
+			UserInfo transactionUserInfo = transactionCardInfo.getUserInfo();
+			transactionDTO.setCardNumber(transactionCardInfo.getCardNumber());
+			transactionDTO.setFirstName(transactionUserInfo.getFirstName());
+			transactionDTO.setLastName(transactionUserInfo.getLastName());
+
+			Set<CardInfo> cardInfos = byUser.getCardInfo();
+			Map<String, String> cards = new HashMap<>();
+			cardInfos.stream().forEach(cardInfo -> cards.put(cardInfo.getCardNumber(), cardInfo.getBalance() + " Р"));
+			transactionDTO.setCards(cards);
+
+			redirectAttributes.addFlashAttribute("isFounded", true);
+			redirectAttributes.addFlashAttribute("transactionClient", transactionDTO);
+			redirectAttributes.addFlashAttribute("successSearch", "It was found by your request");
+		}
+		return  "redirect:/client/transaction";
+	}
+
 }

@@ -32,7 +32,10 @@
         </div>
     </div>
     <div th:each="client : ${clients}">
-        <form method="get" th:action="@{/client/transfer}">
+        <form method="get" th:action="@{/client/transactionFromTemplate}">
+            <input type="hidden" name="firstName"  th:value="${client.getFirstName()}"/>
+            <input type="hidden" name="lastName" th:value="${client.getLastName()}"/>
+            <input type="hidden" name="cardNumber" th:value="${client.getCardNumber()}"/>
             <label>
                 Name: <span th:text="${client.getFirstName()}"/>
             </label>
@@ -44,7 +47,7 @@
             </label>
             <input type="submit" value="Make a transfer">
         </form>
-        <form th:method="delete" th:action="@{/client/templates/delete/{cardNumber} (cardNumber = ${client.getCardNumber()})}">
+        <form method="post" th:action="@{/client/templates/deleteTemplate/{cardNumber} (cardNumber = ${client.getCardNumber()})}">
             <input type="submit" value="Delete">
         </form>
     </div>

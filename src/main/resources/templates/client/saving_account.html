@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div th:if="${hasAccount == true}">
+        <div th:object="${savingAccount}">
+            <form>
+
+            </form>
+        </div>
+    </div>
+    <div th:if="${hasAccount == false}">
+        <h2>How interest is calculated and what is the minimum balance</h2>
+        <p>The minimum balance is the minimum amount that was on your savings account during the month.
+            It is on it that interest will be charged.
+            Fixed interest rate 1.5%
+        </p>
+        <form method="get" th:action="@{/client/savingAccount/createAccount}">
+            <input type="submit" value="Open saving account">
+        </form>
+        <div th:if="${creatingAccount == true}">
+            <span>Select the card from which the initial contribution will be made</span>
+            <form method="post" th:action="@{/client/savingAccount/createAccount}">
+                <select name="fromCardNumber">
+                    <option th:each="card : ${cards.entrySet()}" th:value="${card.getKey()}" th:text="${card.getKey()} + ' ' + ${card.getValue()}"/>
+                </select>
+                <label>
+                    Input initial sum: <input type="text" name="sum">
+                </label>
+                <span th:text="${sumErr}" style="color: red"/>
+                <input type="submit" value="Create">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

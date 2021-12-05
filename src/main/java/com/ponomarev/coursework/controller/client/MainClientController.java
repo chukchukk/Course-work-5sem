@@ -2,6 +2,8 @@ package com.ponomarev.coursework.controller.client;
 
 import com.ponomarev.coursework.dto.ChangeLoginEmailDTO;
 import com.ponomarev.coursework.dto.ChangePasswordDTO;
+import com.ponomarev.coursework.dto.CreateSavingAccountDTO;
+import com.ponomarev.coursework.dto.FromToTransferDTO;
 import com.ponomarev.coursework.model.Template;
 import com.ponomarev.coursework.model.User;
 import com.ponomarev.coursework.service.ClientService;
@@ -75,12 +77,11 @@ public class MainClientController {
 
 	@PostMapping("/templates/addTemplate")
 	public String addClientTemplate(@ModelAttribute Template template,
-									RedirectAttributes redirectAttributes,
 									@AuthenticationPrincipal User user) {
-		return clientService.addClientTemplate(user, template, redirectAttributes);
+		return clientService.addClientTemplate(user, template);
 	}
 
-	@DeleteMapping("/templates/delete/{cardNumber}")
+	@PostMapping("/templates/deleteTemplate/{cardNumber}")
 	public String deleteTemplate(@PathVariable(name = "cardNumber") String cardNumber,
 								 @AuthenticationPrincipal User user) {
 		return clientService.deleteTemplate(cardNumber, user);
@@ -99,10 +100,39 @@ public class MainClientController {
 		return clientService.findClientForTransaction(user, cardNumber, redirectAttributes);
 	}
 
-	//TODO сделать получение карты пользователя при транзакции
-	@PostMapping("/transaction/test")
-	public String test(@RequestParam(name = "carddd") String carddd) {
-		return carddd;
+	@PostMapping("/transaction/doTransaction")
+	public String doTransaction(@AuthenticationPrincipal User user,
+					   @ModelAttribute FromToTransferDTO fromToTransferDTO,
+					   BindingResult errors,
+					   RedirectAttributes redirectAttributes) {
+		return clientService.doTransaction(user, fromToTransferDTO, errors, redirectAttributes);
+	}
+
+	@GetMapping("/transactionFromTemplate")
+	public String transactionFromTemplate(@AuthenticationPrincipal User user,
+										  @ModelAttribute Template template,
+										  RedirectAttributes redirectAttributes) {
+		return clientService.transactionFromTemplate(user, template, redirectAttributes);
+	}
+
+	@GetMapping("/savingAccount")
+	public String savingAccountPage(@AuthenticationPrincipal User user,
+									Model model,
+									HttpServletRequest request) {
+		return clientService.getSavingAccountPage(user, model, request);
+	}
+
+	@GetMapping("/savingAccount/createAccount")
+	public String createSavingAccountPage(@AuthenticationPrincipal User user,
+										  RedirectAttributes redirectAttributes) {
+		return clientService.createSavingAccountPage(user, redirectAttributes);
+	}
+
+	@PostMapping("/savingAccount/createAccount")
+	public String createSavingAccount(@AuthenticationPrincipal User user,
+									  @ModelAttribute CreateSavingAccountDTO savingAccountDTO,
+									  RedirectAttributes redirectAttributes) {
+		return clientService.createSavingAccount(user, savingAccountDTO, redirectAttributes);
 	}
 
 }

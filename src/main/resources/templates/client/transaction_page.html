@@ -10,25 +10,34 @@
         <input type="text" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX">
         <input type="submit" value="Find client">
     </form>
+    <span th:text="${transactionIsEnded}" style="color: green;"/>
     <div th:if="${isFounded == true}">
         <div th:object="${transactionClient}">
-            <span style="color: green" th:text="${successSearch}"/>
-            <span style="color: red" th:text="${notSuccessSearch}"/>
-            <form method="post" th:action="@{/client/transaction/test}" th:if="${transactionClient.getFirstName() != null}">
+            <span style="color: green" th:text="${success}"/>
+            <span style="color: red" th:text="${notSuccess}"/>
+            <form method="post" th:action="@{/client/transaction/doTransaction}" th:if="${transactionClient.getFirstName() != null}">
                 <span>Found client</span><br>
                 <label>
                     Name: <span th:text="${transactionClient.getFirstName()}"/>
+                    <input type="hidden" name="toFirstName" th:value="${transactionClient.getFirstName()}" />
                 </label><br>
                 <label>
                     Last Name: <span th:text="${transactionClient.getLastName()}"/>
+                    <input type="hidden" name="toLastName" th:value="${transactionClient.getLastName()}">
                 </label><br>
                 <label>
                     Card Number: <span th:text="${transactionClient.getCardNumber()}"/>
+                    <input type="hidden" name="toCardNumber" th:value="${transactionClient.getCardNumber()}" />
                 </label><br>
+                <span style="color: red" th:text="${balanceErr}"/>
                 <span>Select the card from which you want to transfer money</span><br>
-                <select>
+                <select name="fromCardNumber">
                     <option th:each="card : ${transactionClient.getCards().entrySet()}" th:value="${card.getKey()}" th:text="${card.getKey()} + ' ' + ${card.getValue()}"/>
                 </select>
+                <label>
+                    Transfer amount: <input type="text" name="sum">
+                </label>
+                <span th:text="${sumErr}" style="color: red"/>
                 <input type="submit" value="continue">
             </form>
         </div>

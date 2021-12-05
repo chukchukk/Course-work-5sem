@@ -42,6 +42,10 @@ public class User extends BaseEntity implements UserDetails {
     @JoinColumn(name = "user_id")
     private Set<Template> templates;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "saving_account_id")
+    private SavingAccount savingAccount;
+
     public enum Role implements GrantedAuthority{
         USER, ADMIN;
 
@@ -85,4 +89,9 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return active;
     }
+
+    public boolean deleteTemplateById(Long id) {
+        return templates.removeIf(e -> e.getId().equals(id));
+    }
+
 }

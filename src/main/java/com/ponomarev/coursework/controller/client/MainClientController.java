@@ -102,7 +102,7 @@ public class MainClientController {
 
 	@PostMapping("/transaction/doTransaction")
 	public String doTransaction(@AuthenticationPrincipal User user,
-					   @ModelAttribute FromToTransferDTO fromToTransferDTO,
+					   @ModelAttribute @Valid FromToTransferDTO fromToTransferDTO,
 					   BindingResult errors,
 					   RedirectAttributes redirectAttributes) {
 		return clientService.doTransaction(user, fromToTransferDTO, errors, redirectAttributes);
@@ -124,15 +124,19 @@ public class MainClientController {
 
 	@GetMapping("/savingAccount/createAccount")
 	public String createSavingAccountPage(@AuthenticationPrincipal User user,
-										  RedirectAttributes redirectAttributes) {
-		return clientService.createSavingAccountPage(user, redirectAttributes);
+										  RedirectAttributes redirectAttributes,
+										  HttpServletRequest request) {
+		return clientService.createSavingAccountPage(user, redirectAttributes, request);
 	}
 
 	@PostMapping("/savingAccount/createAccount")
 	public String createSavingAccount(@AuthenticationPrincipal User user,
-									  @ModelAttribute CreateSavingAccountDTO savingAccountDTO,
+									  @ModelAttribute @Valid CreateSavingAccountDTO savingAccountDTO,
+									  BindingResult bindingResult,
 									  RedirectAttributes redirectAttributes) {
-		return clientService.createSavingAccount(user, savingAccountDTO, redirectAttributes);
+		return clientService.createSavingAccount(user, savingAccountDTO, bindingResult, redirectAttributes);
 	}
+
+
 
 }

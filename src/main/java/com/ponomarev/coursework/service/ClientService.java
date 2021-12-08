@@ -7,6 +7,7 @@ import com.ponomarev.coursework.repository.TemplateRepository;
 import com.ponomarev.coursework.repository.UserInfoRepository;
 import com.ponomarev.coursework.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -238,7 +239,7 @@ public class ClientService implements BaseService {
 
 		if (userHasCard) {
 			CardInfo userCard = cardInfoRepository.findCardInfoByCardNumber(fromToTransferDTO.getFromCardNumber()).get();
-			if (userCard.getBalance() < Double.parseDouble(fromToTransferDTO.getSum())) {
+			if (userCard.getBalance() < fromToTransferDTO.getSum()) {
 				TransactionDTO transactionDTO = new TransactionDTO();
 				transactionDTO.setFirstName(fromToTransferDTO.getToFirstName());
 				transactionDTO.setLastName(fromToTransferDTO.getToLastName());
@@ -250,8 +251,8 @@ public class ClientService implements BaseService {
 				return "redirect:/client/transaction";
 			} else {
 				CardInfo toCard = cardInfoRepository.findCardInfoByCardNumber(fromToTransferDTO.getToCardNumber()).get();
-				userCard.setBalance(userCard.getBalance() - Double.parseDouble(fromToTransferDTO.getSum()));
-				toCard.setBalance(toCard.getBalance() + Double.parseDouble(fromToTransferDTO.getSum()));
+				userCard.setBalance(userCard.getBalance() - fromToTransferDTO.getSum());
+				toCard.setBalance(toCard.getBalance() + fromToTransferDTO.getSum());
 				redirectAttributes.addFlashAttribute("transactionIsEnded", "Success");
 			}
 		} else {
@@ -292,7 +293,12 @@ public class ClientService implements BaseService {
 				model.addAttribute("hasAccount", false);
 			}
 			else {
-				//TODO
+				SavingAccountDTO savingAccountDTO = new SavingAccountDTO();
+				savingAccountDTO.setBalance(savingAccount.getBalance());
+				savingAccountDTO.setMinBalance(savingAccount.getMinBalance());
+				savingAccountDTO.setAccrual(savingAccount.getMinBalance() * 0.015);
+				model.addAttribute("hasAccount", true);
+				model.addAttribute("savingAccount", savingAccountDTO);
 			}
 		} else {
 			requestModelFilling(request, model);
@@ -300,7 +306,10 @@ public class ClientService implements BaseService {
 		return "client/saving_account";
 	}
 
-	public String createSavingAccountPage(User user, RedirectAttributes redirectAttributes) {
+	public String createSavingAccountPage(User user, RedirectAttributes redirectAttributes,
+										  HttpServletRequest request) {
+		Map<String, ?> flashAttributes = RequestContextUtils.getInputFlashMap(request);
+		System.out.println(flashAttributes);
 		redirectAttributes.addFlashAttribute("hasAccount", false);
 		redirectAttributes.addFlashAttribute("creatingAccount", true);
 
@@ -310,19 +319,27 @@ public class ClientService implements BaseService {
 		Map<String, String> cards = new HashMap<>();
 		cardInfoSet.stream().filter(CardInfo::isActive).forEach(cardInfo -> cards.put(cardInfo.getCardNumber(), cardInfo.getBalance() + " Р"));
 		redirectAttributes.addFlashAttribute("cards", cards);
+		if (flashAttributes != null) {
+			flashAttributes.forEach(redirectAttributes::addFlashAttribute);
+			System.out.println(redirectAttributes.getFlashAttributes());
+		}
 		return "redirect:/client/savingAccount";
 	}
 
 	@Transactional(rollbackFor = Exception.class)
-	public String createSavingAccount(User user, CreateSavingAccountDTO savingAccountDTO, RedirectAttributes redirectAttributes) {
-		if (Double.parseDouble(savingAccountDTO.getSum()) <= 0) {
+	public String createSavingAccount(User user, CreateSavingAccountDTO savingAccountDTO, BindingResult errors, RedirectAttributes redirectAttributes) {
+		if (errors.hasErrors()) {
+			fillErrors(errors, redirectAttributes);
+			return "redirect:/client/savingAccount/createAccount";
+		}
+		if (savingAccountDTO.getSum() <= 0) {
 			redirectAttributes.addFlashAttribute("sumErr", "Initial sum must be more then 0");
-			return "redirect:/savingAccount/createAccount";
+			return "redirect:/client/savingAccount/createAccount";
 		}
 		Optional<CardInfo> userCard = cardInfoRepository.findCardInfoByCardNumber(savingAccountDTO.getFromCardNumber());
 		if (userCard.isPresent()) {
 			CardInfo cardInfo = userCard.get();
-			if (cardInfo.getBalance() < Double.parseDouble(savingAccountDTO.getSum())) {
+			if (cardInfo.getBalance() < savingAccountDTO.getSum()) {
 				redirectAttributes.addFlashAttribute("sumErr", "Check your card balance");
 			}
 			else {
@@ -330,8 +347,9 @@ public class ClientService implements BaseService {
 				SavingAccount savingAccount = new SavingAccount();
 				savingAccount.setCreatedDate(date.toString());
 				savingAccount.setUpdatedDate(date.toString());
-				savingAccount.setBalance(Double.parseDouble(savingAccountDTO.getSum()));
-				cardInfo.setBalance(cardInfo.getBalance() - Double.parseDouble(savingAccountDTO.getSum()));
+				savingAccount.setBalance(savingAccountDTO.getSum());
+				savingAccount.setMinBalance(savingAccount.getBalance());
+				cardInfo.setBalance(cardInfo.getBalance() - savingAccountDTO.getSum());
 
 				user.setSavingAccount(savingAccount);
 				userRepository.save(user);

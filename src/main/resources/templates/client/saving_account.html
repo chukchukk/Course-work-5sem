@@ -7,9 +7,15 @@
 <body>
     <div th:if="${hasAccount == true}">
         <div th:object="${savingAccount}">
-            <form>
-
-            </form>
+            <label>
+                Balance of saving account: <span th:text="${savingAccount.getBalance()}"/>
+            </label><br>
+            <label>
+                Minimum balance for a month: <span th:text="${savingAccount.getMinBalance()}"/>
+            </label><br>
+            <label>
+                Accrual at the end of the month: <span th:text="${savingAccount.getAccrual()}"/>
+            </label>
         </div>
     </div>
     <div th:if="${hasAccount == false}">

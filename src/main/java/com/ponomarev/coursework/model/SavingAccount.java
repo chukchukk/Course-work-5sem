@@ -18,4 +18,6 @@ public class SavingAccount extends BaseEntity{
 
 	private Double balance;
 
+	private Double minBalance;
+
 }

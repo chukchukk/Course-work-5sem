@@ -34,7 +34,7 @@ public class User extends BaseEntity implements UserDetails {
 
     private boolean active;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "user_info_id")
     private UserInfo information;
 

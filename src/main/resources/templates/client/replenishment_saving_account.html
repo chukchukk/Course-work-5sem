@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Replenishment saving account</title>
+</head>
+<body>
+    <span>Type card from: </span><br>
+    <form method="post" th:action="@{/client/savingAccount/replenishment}">
+        <select name="cardNumber">
+            <option th:each="card : ${cards.entrySet()}" th:value="${card.getKey()}" th:text="${card.getKey()} + ' ' + ${card.getValue()}"/>
+        </select>
+        <label>
+            Input sum: <input type="text" name="sum">
+        </label>
+        <span th:text="${sumErr}" style="color: red"/>
+        <span th:text="${success}" style="color: green"/>
+        <input type="submit" value="Replenishment">
+    </form>
+</body>
+</html>

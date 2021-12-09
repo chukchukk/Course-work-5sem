@@ -32,11 +32,11 @@
                 <span style="color: red" th:text="${balanceErr}"/>
                 <span>Select the card from which you want to transfer money</span><br>
                 <select name="fromCardNumber">
-                    <option th:each="card : ${transactionClient.getCards().entrySet()}" th:value="${card.getKey()}" th:text="${card.getKey()} + ' ' + ${card.getValue()}"/>
+                    <option th:each="card : ${transactionClient.getCards().entrySet()}" th:value="${card.getKey()}" th:text="'Card number: ' + ${card.getKey()} + ' || Balance: ' + ${card.getValue()}"/>
                 </select>
                 <label>
-                    Transfer amount: <input type="text" name="sum">
-                </label>
+                    Transfer amount: <input type="number" name="sum">
+                </label><br>
                 <span th:text="${sumErr}" style="color: red"/>
                 <input type="submit" value="continue">
             </form>

@@ -2,7 +2,7 @@ package com.ponomarev.coursework.controller.client;
 
 import com.ponomarev.coursework.dto.ChangeLoginEmailDTO;
 import com.ponomarev.coursework.dto.ChangePasswordDTO;
-import com.ponomarev.coursework.dto.CreateSavingAccountDTO;
+import com.ponomarev.coursework.dto.SavingAccountOperationDTO;
 import com.ponomarev.coursework.dto.FromToTransferDTO;
 import com.ponomarev.coursework.model.Template;
 import com.ponomarev.coursework.model.User;
@@ -131,12 +131,52 @@ public class MainClientController {
 
 	@PostMapping("/savingAccount/createAccount")
 	public String createSavingAccount(@AuthenticationPrincipal User user,
-									  @ModelAttribute @Valid CreateSavingAccountDTO savingAccountDTO,
+									  @ModelAttribute @Valid SavingAccountOperationDTO savingAccountDTO,
 									  BindingResult bindingResult,
 									  RedirectAttributes redirectAttributes) {
 		return clientService.createSavingAccount(user, savingAccountDTO, bindingResult, redirectAttributes);
 	}
 
+	@GetMapping("/savingAccount/replenishment")
+	public String getReplenishmentAccountPage(@AuthenticationPrincipal User user,
+											  Model model,
+											  HttpServletRequest request) {
+		return clientService.replenishmentAccountPage(user, model, request);
+	}
 
+	@PostMapping("/savingAccount/replenishment")
+	public String replenishmentAccount(@ModelAttribute @Valid SavingAccountOperationDTO dto,
+									   @AuthenticationPrincipal User user,
+									   BindingResult bindingResult,
+									   RedirectAttributes redirectAttributes) {
+		return clientService.replenishmentAccount(dto, user, bindingResult, redirectAttributes);
+	}
+
+	@GetMapping("/savingAccount/withdraw")
+	public String getWithdrawAccountPage(@AuthenticationPrincipal User user,
+								  Model model,
+								  HttpServletRequest request) {
+		return clientService.withdrawAccountPage(user, model, request);
+	}
+
+	@PostMapping("/savingAccount/withdraw")
+	public String withdrawAccount(@ModelAttribute @Valid SavingAccountOperationDTO dto,
+								  @AuthenticationPrincipal User user,
+								  BindingResult bindingResult,
+								  RedirectAttributes redirectAttributes) {
+		return clientService.withdrawAccount(dto, user, bindingResult, redirectAttributes);
+	}
+
+	@GetMapping("/savingAccount/close")
+	public String getCloseAccountPage(@AuthenticationPrincipal User user,
+									  RedirectAttributes redirectAttributes) {
+		return clientService.closeAccountPage(user, redirectAttributes);
+	}
+
+	@PostMapping("/savingAccount/close")
+	public String closeAccount(@RequestParam(name = "cardNumber") String cardNumber,
+							   @AuthenticationPrincipal User user) {
+		return clientService.closeAccount(cardNumber, user);
+	}
 
 }

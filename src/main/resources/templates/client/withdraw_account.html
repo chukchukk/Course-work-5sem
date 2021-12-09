@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Withdraw account</title>
+</head>
+<body>
+    <span>Select a card for withdrawal: </span><br>
+    <form method="post" th:action="@{/client/savingAccount/withdraw}">
+        <select name="cardNumber">
+            <option th:each="card : ${cards.entrySet()}" th:value="${card.getKey()}" th:text="${card.getKey()} + ' ' + ${card.getValue()}"/>
+        </select>
+        <label>
+            Input sum: <input type="text" name="sum">
+        </label>
+        <span th:text="${sumErr}" style="color: red"/>
+        <span th:text="${success}" style="color: green"/>
+        <input type="submit" value="Withdraw">
+    </form>
+</body>
+</html>

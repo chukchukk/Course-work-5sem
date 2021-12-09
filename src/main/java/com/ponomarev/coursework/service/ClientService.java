@@ -2,12 +2,9 @@ package com.ponomarev.coursework.service;
 
 import com.ponomarev.coursework.dto.*;
 import com.ponomarev.coursework.model.*;
-import com.ponomarev.coursework.repository.CardInfoRepository;
-import com.ponomarev.coursework.repository.TemplateRepository;
-import com.ponomarev.coursework.repository.UserInfoRepository;
-import com.ponomarev.coursework.repository.UserRepository;
+import com.ponomarev.coursework.repository.*;
 import lombok.AllArgsConstructor;
-import org.springframework.context.MessageSource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +31,8 @@ public class ClientService implements BaseService {
 	private final CardInfoRepository cardInfoRepository;
 
 	private final TemplateRepository templateRepository;
+
+	private final SavingAccountRepository savingAccountRepository;
 
 	public String clientMainPage(User user, HttpServletRequest request, Model model) {
 		requestModelFilling(request, model);
@@ -286,30 +285,26 @@ public class ClientService implements BaseService {
 	}
 
 	public String getSavingAccountPage(User user, Model model, HttpServletRequest request) {
-		Map<String, ?> flashAttributes = RequestContextUtils.getInputFlashMap(request);
-		if (flashAttributes == null) {
-			SavingAccount savingAccount = user.getSavingAccount();
-			if (savingAccount == null) {
-				model.addAttribute("hasAccount", false);
-			}
-			else {
-				SavingAccountDTO savingAccountDTO = new SavingAccountDTO();
-				savingAccountDTO.setBalance(savingAccount.getBalance());
-				savingAccountDTO.setMinBalance(savingAccount.getMinBalance());
-				savingAccountDTO.setAccrual(savingAccount.getMinBalance() * 0.015);
-				model.addAttribute("hasAccount", true);
-				model.addAttribute("savingAccount", savingAccountDTO);
-			}
-		} else {
-			requestModelFilling(request, model);
+		SavingAccount savingAccount = user.getSavingAccount();
+		if (savingAccount == null) {
+			model.addAttribute("hasAccount", false);
 		}
+		else {
+			SavingAccountDTO savingAccountDTO = new SavingAccountDTO();
+			savingAccountDTO.setBalance(savingAccount.getBalance());
+			savingAccountDTO.setMinBalance(savingAccount.getMinBalance());
+			savingAccountDTO.setAccrual(savingAccount.getMinBalance() * 0.015);
+			model.addAttribute("hasAccount", true);
+			model.addAttribute("savingAccount", savingAccountDTO);
+		}
+		requestModelFilling(request, model);
+
 		return "client/saving_account";
 	}
 
 	public String createSavingAccountPage(User user, RedirectAttributes redirectAttributes,
 										  HttpServletRequest request) {
 		Map<String, ?> flashAttributes = RequestContextUtils.getInputFlashMap(request);
-		System.out.println(flashAttributes);
 		redirectAttributes.addFlashAttribute("hasAccount", false);
 		redirectAttributes.addFlashAttribute("creatingAccount", true);
 
@@ -326,8 +321,7 @@ public class ClientService implements BaseService {
 		return "redirect:/client/savingAccount";
 	}
 
-	@Transactional(rollbackFor = Exception.class)
-	public String createSavingAccount(User user, CreateSavingAccountDTO savingAccountDTO, BindingResult errors, RedirectAttributes redirectAttributes) {
+	public String createSavingAccount(User user, SavingAccountOperationDTO savingAccountDTO, BindingResult errors, RedirectAttributes redirectAttributes) {
 		if (errors.hasErrors()) {
 			fillErrors(errors, redirectAttributes);
 			return "redirect:/client/savingAccount/createAccount";
@@ -336,28 +330,114 @@ public class ClientService implements BaseService {
 			redirectAttributes.addFlashAttribute("sumErr", "Initial sum must be more then 0");
 			return "redirect:/client/savingAccount/createAccount";
 		}
-		Optional<CardInfo> userCard = cardInfoRepository.findCardInfoByCardNumber(savingAccountDTO.getFromCardNumber());
+		Optional<CardInfo> userCard = cardInfoRepository.findCardInfoByCardNumber(savingAccountDTO.getCardNumber());
 		if (userCard.isPresent()) {
 			CardInfo cardInfo = userCard.get();
 			if (cardInfo.getBalance() < savingAccountDTO.getSum()) {
 				redirectAttributes.addFlashAttribute("sumErr", "Check your card balance");
 			}
 			else {
-				LocalDate date = LocalDate.now();
+				Date time = Calendar.getInstance().getTime();
 				SavingAccount savingAccount = new SavingAccount();
-				savingAccount.setCreatedDate(date.toString());
-				savingAccount.setUpdatedDate(date.toString());
+				savingAccount.setCreatedDate(time);
+				savingAccount.setDay(LocalDate.now().getDayOfMonth());
 				savingAccount.setBalance(savingAccountDTO.getSum());
 				savingAccount.setMinBalance(savingAccount.getBalance());
-				cardInfo.setBalance(cardInfo.getBalance() - savingAccountDTO.getSum());
+				savingAccount.setActive(true);
+				cardInfo.setBalance(0.0);
+				cardInfoRepository.save(cardInfo);
 
 				user.setSavingAccount(savingAccount);
 				userRepository.save(user);
-				cardInfoRepository.save(cardInfo);
 			}
 		} else {
 			redirectAttributes.addFlashAttribute("sumErr", "Card is not present");
 		}
 		return "redirect:/client/savingAccount";
+	}
+
+	//TODO - это верный варик, делать так везде
+	public String replenishmentAccountPage(User user, Model model, HttpServletRequest request) {
+		requestModelFilling(request, model);
+		UserInfo userInfo = userInfoRepository.findByUser(user);
+		Set<CardInfo> cardInfoSet = userInfo.getCardInfo();
+		Map<String, String> cards = new HashMap<>();
+		cardInfoSet.stream().filter(CardInfo::isActive).forEach(cardInfo -> cards.put(cardInfo.getCardNumber(), cardInfo.getBalance() + " Р"));
+		model.addAttribute("cards", cards);
+		return "client/replenishment_saving_account";
+	}
+
+	public String replenishmentAccount(SavingAccountOperationDTO dto, User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		CardInfo cardInfo = cardInfoRepository.findCardInfoByCardNumber(dto.getCardNumber()).get();
+		if (bindingResult.hasErrors()) {
+			fillErrors(bindingResult, redirectAttributes);
+		} else {
+			if (cardInfo.getBalance() < dto.getSum()) {
+				redirectAttributes.addFlashAttribute("sumErr", "insufficient funds");
+			} else {
+				SavingAccount savingAccount = user.getSavingAccount();
+				savingAccount.setBalance(savingAccount.getBalance() + dto.getSum());
+				cardInfo.setBalance(cardInfo.getBalance() - dto.getSum());
+				cardInfoRepository.save(cardInfo);
+				savingAccountRepository.save(savingAccount);
+				redirectAttributes.addFlashAttribute("success", "Success");
+			}
+		}
+		return "redirect:/client/savingAccount/replenishment";
+	}
+
+	public String withdrawAccountPage(User user, Model model, HttpServletRequest request) {
+		requestModelFilling(request, model);
+		UserInfo userInfo = userInfoRepository.findByUser(user);
+		Set<CardInfo> cardInfoSet = userInfo.getCardInfo();
+		Map<String, String> cards = new HashMap<>();
+		cardInfoSet.stream().filter(CardInfo::isActive).forEach(cardInfo -> cards.put(cardInfo.getCardNumber(), cardInfo.getBalance() + " Р"));
+		model.addAttribute("cards", cards);
+		model.addAttribute("savingAccountBalance", user.getSavingAccount().getBalance());
+		return "client/withdraw_account";
+	}
+
+	public String withdrawAccount(SavingAccountOperationDTO dto, User user, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+		CardInfo cardInfo = cardInfoRepository.findCardInfoByCardNumber(dto.getCardNumber()).get();
+		if (bindingResult.hasErrors()) {
+			fillErrors(bindingResult, redirectAttributes);
+		} else {
+			if (cardInfo.getBalance() < dto.getSum()) {
+				redirectAttributes.addFlashAttribute("sumErr", "insufficient funds");
+			} else {
+				SavingAccount savingAccount = user.getSavingAccount();
+				cardInfo.setBalance(cardInfo.getBalance() + dto.getSum());
+				savingAccount.setBalance(savingAccount.getBalance() - dto.getSum());
+				if (savingAccount.getBalance() < savingAccount.getMinBalance()) {
+					savingAccount.setMinBalance(savingAccount.getBalance());
+				}
+				cardInfoRepository.save(cardInfo);
+				savingAccountRepository.save(savingAccount);
+				redirectAttributes.addFlashAttribute("success", "Success");
+			}
+		}
+		return "redirect:/client/savingAccount/withdraw";
+	}
+
+	public String closeAccountPage(User user, RedirectAttributes redirectAttributes) {
+		UserInfo userInfo = userInfoRepository.findByUser(user);
+		Set<CardInfo> cardInfoSet = userInfo.getCardInfo();
+		Map<String, String> cards = new HashMap<>();
+		cardInfoSet.stream().filter(CardInfo::isActive).forEach(cardInfo -> cards.put(cardInfo.getCardNumber(), cardInfo.getBalance() + " Р"));
+		redirectAttributes.addFlashAttribute("isClosing", true);
+		redirectAttributes.addFlashAttribute("cards", cards);
+		return "redirect:/client/savingAccount";
+	}
+
+	public String closeAccount(String cardNumber, User user) {
+		CardInfo cardInfoByCardNumber = cardInfoRepository.findCardInfoByCardNumber(cardNumber).get();
+		SavingAccount savingAccount = user.getSavingAccount();
+		cardInfoByCardNumber.setBalance(cardInfoByCardNumber.getBalance() + savingAccount.getBalance());
+		user.setSavingAccount(null);
+		savingAccount.setActive(false);
+		userRepository.save(user);
+		savingAccountRepository.save(savingAccount);
+		cardInfoRepository.save(cardInfoByCardNumber);
+		return "redirect:/client";
 	}
 }

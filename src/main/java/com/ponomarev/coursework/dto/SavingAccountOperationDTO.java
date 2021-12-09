@@ -7,9 +7,9 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class CreateSavingAccountDTO {
+public class SavingAccountOperationDTO {
 
-	private String fromCardNumber;
+	private String cardNumber;
 
 	@NotNull(message = "Input value")
 	private Double sum;

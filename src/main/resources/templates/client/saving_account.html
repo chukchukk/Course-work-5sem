@@ -15,7 +15,25 @@
             </label><br>
             <label>
                 Accrual at the end of the month: <span th:text="${savingAccount.getAccrual()}"/>
-            </label>
+            </label><br>
+            <form method="get" th:action="@{/client/savingAccount/replenishment}">
+                <input type="submit" value="Top up savings account"/>
+            </form>
+            <form method="get" th:action="@{/client/savingAccount/withdraw}">
+                <input type="submit" value="Withdraw money">
+            </form>
+            <form method="get" th:action="@{/client/savingAccount/close}">
+                <input type="submit" value="Close an account">
+            </form>
+            <div th:if="${isClosing == true}">
+                <form method="post" th:action="@{/client/savingAccount/close}">
+                    <span>Card closing. Type card for withdraw: </span><br>
+                    <select name="cardNumber">
+                        <option th:each="card : ${cards.entrySet()}" th:value="${card.getKey()}" th:text="${card.getKey()} + ' ' + ${card.getValue()}"/>
+                    </select>
+                    <input type="submit" value="Close account">
+                </form>
+            </div>
         </div>
     </div>
     <div th:if="${hasAccount == false}">
@@ -30,7 +48,7 @@
         <div th:if="${creatingAccount == true}">
             <span>Select the card from which the initial contribution will be made</span>
             <form method="post" th:action="@{/client/savingAccount/createAccount}">
-                <select name="fromCardNumber">
+                <select name="cardNumber">
                     <option th:each="card : ${cards.entrySet()}" th:value="${card.getKey()}" th:text="${card.getKey()} + ' ' + ${card.getValue()}"/>
                 </select>
                 <label>

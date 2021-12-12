@@ -1,4 +1,4 @@
-package com.ponomarev.coursework.controller.admin;
+package com.ponomarev.coursework.controller;
 
 import com.ponomarev.coursework.dto.CardInfoDTO;
 import com.ponomarev.coursework.dto.RegisterNewClientDTO;

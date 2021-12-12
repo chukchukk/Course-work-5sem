@@ -1,4 +1,4 @@
-package com.ponomarev.coursework.redisconfig;
+package com.ponomarev.coursework.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

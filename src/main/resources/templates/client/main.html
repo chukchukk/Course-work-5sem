@@ -8,9 +8,6 @@
 <a href="/client/changeClientInfo">
     <input type="button" value="Change User Info">
 </a><br>
-<a href="/client/operationsHistory">
-    <input type="button" value="Operations History">
-</a>
 <a href="/client/templates">
     <input type="button" value="Templates">
 </a>
@@ -19,6 +16,9 @@
 </a>
 <a href="/client/savingAccount">
     <input type="button" value="Saving account">
+</a>
+<a href="/client/history">
+    <input type="button" value="Operation History">
 </a>
 <span th:text="${cardErr}" style="color: red"/>
 <span th:text="${cardSuccess}" style="color: green"/>
@@ -30,8 +30,5 @@
     </form>
     <span>Balance: <span th:text="${card.getBalance()}"/></span>
 </div>
-<a href="/client/getNewCard">
-    <input type="button" value="Get a new card">
-</a><br>
 </body>
 </html>

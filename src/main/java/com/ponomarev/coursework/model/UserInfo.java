@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -40,5 +41,9 @@ public class UserInfo extends BaseEntity{
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "user_info_id")
     private Set<CardInfo> cardInfo;
+
+    @OneToMany
+    @JoinColumn(name = "user_info_id")
+    private List<History> history;
 
 }

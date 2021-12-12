@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        table {
+            width: 100%;
+            border: 2px double black;
+            text-align: center;
+        }
+        table th {
+            font-weight: bold;
+            padding: 2px;
+            background: #efefef;
+            border: 2px double black;
+        }
+        table td {
+            border: 2px double black;
+            padding: 2px;
+        }
+    </style>
+    <title>Operation history</title>
+</head>
+<body>
+<p>Operations history</p>
+<label>Input concrete date:
+    <form method="get" th:action="@{/client/historyByDate}">
+        <input type="date" name="date">
+        <input type="submit" value="Search">
+    </form>
+</label><br>
+<form method="get" th:action="@{/client/resetHistory}" th:if="${clear}">
+    <input type="submit" value="Reset selection">
+</form>
+<span th:text="${emptyList}" style="color: red"/><br>
+<table>
+    <thead>
+    <tr>
+        <th> Operation Type </th>
+        <th> Date </th>
+        <th> Message </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="history: ${historyList}">
+        <td><span th:text="${history.getOperationType()}"/></td>
+        <td><span th:text="${history.getDate()}"/></td>
+        <td><span th:text="${history.getMessage()}"/></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

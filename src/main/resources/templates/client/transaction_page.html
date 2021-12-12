@@ -10,11 +10,11 @@
         <input type="text" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX">
         <input type="submit" value="Find client">
     </form>
+    <span style="color: green" th:text="${success}"/>
+    <span style="color: red" th:text="${notSuccess}"/>
     <span th:text="${transactionIsEnded}" style="color: green;"/>
     <div th:if="${isFounded == true}">
         <div th:object="${transactionClient}">
-            <span style="color: green" th:text="${success}"/>
-            <span style="color: red" th:text="${notSuccess}"/>
             <form method="post" th:action="@{/client/transaction/doTransaction}" th:if="${transactionClient.getFirstName() != null}">
                 <span>Found client</span><br>
                 <label>

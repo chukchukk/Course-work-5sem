@@ -1,6 +1,6 @@
 package com.ponomarev.coursework.service;
 
-import com.ponomarev.coursework.model.*;
+import com.ponomarev.coursework.entity.*;
 import com.ponomarev.coursework.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

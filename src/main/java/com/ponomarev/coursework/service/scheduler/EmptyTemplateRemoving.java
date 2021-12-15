@@ -1,6 +1,6 @@
 package com.ponomarev.coursework.service.scheduler;
 
-import com.ponomarev.coursework.model.Template;
+import com.ponomarev.coursework.entity.Template;
 import com.ponomarev.coursework.repository.TemplateRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;

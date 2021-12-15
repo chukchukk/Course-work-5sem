@@ -1,6 +1,6 @@
 package com.ponomarev.coursework.service.scheduler;
 
-import com.ponomarev.coursework.model.SavingAccount;
+import com.ponomarev.coursework.entity.SavingAccount;
 import com.ponomarev.coursework.repository.SavingAccountRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;

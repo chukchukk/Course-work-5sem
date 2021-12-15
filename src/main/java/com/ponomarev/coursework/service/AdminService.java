@@ -2,9 +2,9 @@ package com.ponomarev.coursework.service;
 
 import com.ponomarev.coursework.dto.CardInfoDTO;
 import com.ponomarev.coursework.dto.RegisterNewClientDTO;
-import com.ponomarev.coursework.model.CardInfo;
-import com.ponomarev.coursework.model.PassportInfo;
-import com.ponomarev.coursework.model.UserInfo;
+import com.ponomarev.coursework.entity.CardInfo;
+import com.ponomarev.coursework.entity.PassportInfo;
+import com.ponomarev.coursework.entity.UserInfo;
 import com.ponomarev.coursework.repository.CardInfoRepository;
 import com.ponomarev.coursework.repository.PassportInfoRepository;
 import com.ponomarev.coursework.repository.UserInfoRepository;

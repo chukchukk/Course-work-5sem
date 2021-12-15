@@ -2,10 +2,9 @@ package com.ponomarev.coursework.service;
 
 import com.ponomarev.coursework.dto.ChangeLoginEmailDTO;
 import com.ponomarev.coursework.dto.ChangePasswordDTO;
-import com.ponomarev.coursework.model.User;
-import com.ponomarev.coursework.model.UserInfo;
+import com.ponomarev.coursework.entity.User;
+import com.ponomarev.coursework.entity.UserInfo;
 import com.ponomarev.coursework.repository.*;
-import com.ponomarev.coursework.service.BaseService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

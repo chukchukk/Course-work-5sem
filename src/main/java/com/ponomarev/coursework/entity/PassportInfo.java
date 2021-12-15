@@ -1,4 +1,4 @@
-package com.ponomarev.coursework.model;
+package com.ponomarev.coursework.entity;
 
 
 import lombok.Getter;
@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.Date;
 
 @Entity
 @Table

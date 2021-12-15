@@ -1,4 +1,4 @@
-package com.ponomarev.coursework.model;
+package com.ponomarev.coursework.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

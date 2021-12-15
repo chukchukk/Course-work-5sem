@@ -1,6 +1,6 @@
 package com.ponomarev.coursework.service.scheduler;
 
-import com.ponomarev.coursework.model.CardInfo;
+import com.ponomarev.coursework.entity.CardInfo;
 import com.ponomarev.coursework.repository.CardInfoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Async;

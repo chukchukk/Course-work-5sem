@@ -1,8 +1,8 @@
 package com.ponomarev.coursework.controller;
 
 import com.ponomarev.coursework.dto.FromToTransferDTO;
-import com.ponomarev.coursework.model.Template;
-import com.ponomarev.coursework.model.User;
+import com.ponomarev.coursework.entity.Template;
+import com.ponomarev.coursework.entity.User;
 import com.ponomarev.coursework.service.ClientTransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

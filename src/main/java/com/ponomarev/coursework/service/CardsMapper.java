@@ -1,8 +1,8 @@
 package com.ponomarev.coursework.service;
 
-import com.ponomarev.coursework.model.CardInfo;
-import com.ponomarev.coursework.model.User;
-import com.ponomarev.coursework.model.UserInfo;
+import com.ponomarev.coursework.entity.CardInfo;
+import com.ponomarev.coursework.entity.User;
+import com.ponomarev.coursework.entity.UserInfo;
 import com.ponomarev.coursework.repository.UserInfoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

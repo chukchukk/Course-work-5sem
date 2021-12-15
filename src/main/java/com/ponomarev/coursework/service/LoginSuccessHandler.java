@@ -20,10 +20,10 @@ public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessH
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         String redirectURL = "/notFound";
 
-        if(principal.getAuthorities().contains(com.ponomarev.coursework.model.User.Role.USER)) {
+        if(principal.getAuthorities().contains(com.ponomarev.coursework.entity.User.Role.USER)) {
             redirectURL = "/client";
         }
-        else if(principal.getAuthorities().contains(com.ponomarev.coursework.model.User.Role.ADMIN)) {
+        else if(principal.getAuthorities().contains(com.ponomarev.coursework.entity.User.Role.ADMIN)) {
             redirectURL = "/admin";
         }
         response.sendRedirect(redirectURL);

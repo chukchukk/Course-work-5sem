@@ -1,7 +1,7 @@
 package com.ponomarev.coursework.repository;
 
-import com.ponomarev.coursework.model.History;
-import com.ponomarev.coursework.model.UserInfo;
+import com.ponomarev.coursework.entity.History;
+import com.ponomarev.coursework.entity.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

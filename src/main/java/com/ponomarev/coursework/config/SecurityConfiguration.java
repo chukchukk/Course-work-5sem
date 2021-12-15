@@ -1,6 +1,6 @@
 package com.ponomarev.coursework.config;
 
-import com.ponomarev.coursework.model.User;
+import com.ponomarev.coursework.entity.User;
 import com.ponomarev.coursework.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;

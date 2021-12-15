@@ -1,7 +1,7 @@
 package com.ponomarev.coursework.service;
 
-import com.ponomarev.coursework.model.ConfirmationToken;
-import com.ponomarev.coursework.model.UserInfo;
+import com.ponomarev.coursework.entity.ConfirmationToken;
+import com.ponomarev.coursework.entity.UserInfo;
 import com.ponomarev.coursework.repository.redis.ConfirmationTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +10,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service

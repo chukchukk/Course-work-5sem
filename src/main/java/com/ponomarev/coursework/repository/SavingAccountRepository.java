@@ -1,6 +1,6 @@
 package com.ponomarev.coursework.repository;
 
-import com.ponomarev.coursework.model.SavingAccount;
+import com.ponomarev.coursework.entity.SavingAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

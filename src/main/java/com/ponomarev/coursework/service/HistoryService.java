@@ -1,8 +1,8 @@
 package com.ponomarev.coursework.service;
 
-import com.ponomarev.coursework.model.History;
-import com.ponomarev.coursework.model.User;
-import com.ponomarev.coursework.model.UserInfo;
+import com.ponomarev.coursework.entity.History;
+import com.ponomarev.coursework.entity.User;
+import com.ponomarev.coursework.entity.UserInfo;
 import com.ponomarev.coursework.repository.HistoryRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 

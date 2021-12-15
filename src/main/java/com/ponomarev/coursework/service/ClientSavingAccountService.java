@@ -2,9 +2,9 @@ package com.ponomarev.coursework.service;
 
 import com.ponomarev.coursework.dto.SavingAccountDTO;
 import com.ponomarev.coursework.dto.SavingAccountOperationDTO;
-import com.ponomarev.coursework.model.CardInfo;
-import com.ponomarev.coursework.model.SavingAccount;
-import com.ponomarev.coursework.model.User;
+import com.ponomarev.coursework.entity.CardInfo;
+import com.ponomarev.coursework.entity.SavingAccount;
+import com.ponomarev.coursework.entity.User;
 import com.ponomarev.coursework.repository.CardInfoRepository;
 import com.ponomarev.coursework.repository.SavingAccountRepository;
 import com.ponomarev.coursework.repository.UserRepository;

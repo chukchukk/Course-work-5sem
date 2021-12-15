@@ -1,6 +1,6 @@
 package com.ponomarev.coursework.repository;
 
-import com.ponomarev.coursework.model.User;
+import com.ponomarev.coursework.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

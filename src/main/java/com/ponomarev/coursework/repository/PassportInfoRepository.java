@@ -1,6 +1,6 @@
 package com.ponomarev.coursework.repository;
 
-import com.ponomarev.coursework.model.PassportInfo;
+import com.ponomarev.coursework.entity.PassportInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

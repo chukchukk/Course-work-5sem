@@ -1,6 +1,6 @@
 package com.ponomarev.coursework.controller;
 
-import com.ponomarev.coursework.model.User;
+import com.ponomarev.coursework.entity.User;
 import com.ponomarev.coursework.service.MainClientService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
